@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "caisse-app",
+    "slug": "caisse-app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
