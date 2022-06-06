@@ -7,6 +7,7 @@ import { Text, Button, Appbar, DataTable, Searchbar, Divider } from 'react-nativ
 
 import QuantitySelector from './Components/quantitySelector';
 import RechercherArticle from './Components/searchBar'
+import TextInputQTE from './Components/textInputQte'
 
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -32,25 +33,36 @@ export default function App() {
   const [qte, setQTE] = useState(0);
   const [remise, setRemise] = useState(0)
   const [searchQuery, setSearchQuery] = React.useState('');
-  
+
   const [typePaiement, setTypePaiement] = useState('');
   const [moneyToReturn, setMoneyToReturn] = useState({ reponse: false, montant: 0 })
   const [pu_euro, setPuEuro] = useState(0)
   // const [isLoading, setLoading] = useState(true);
   const [produitFilter, setProduitFilter] = useState({})
   const [session, setSession] = useState(1)
+  const [focus, setFocus] = useState({
+    isFocused: false,
+    firstLoad: true
+  })
   const focusDiv = useRef();
 
   //Modal vue
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalNewArticle,setModalNewArticle] = useState(false)
+  const [modalNewArticle, setModalNewArticle] = useState(false)
   // const [modalRemise, setModalRemise] = useState(false)
   // const [produit, setProduit] = useState({})
 
   const [totalCaddie, setTotalCaddie] = useState(0)
   const [caisse, setCaisseData] = useState({})
-  const [status,setStatus] = useState(404);
-  // const isMounted = useIsMounted();
+  const [status, setStatus] = useState(404);
+  const isMounted = useIsMounted();
+
+  const onFocus = () => {
+    setFocus({
+      isFocused: focus.isFocused,
+      firstLoad: false
+    })
+  }
 
   const getCaisseData = async () => {
     const data = await caisseData();
@@ -64,7 +76,7 @@ export default function App() {
   const isAvailable = async () => {
     const timeout = new Promise((resolve, reject) => {
       setTimeout(reject, 5000, 'Votre demande est expiré.');
-  });
+    });
 
     const request = fetch('http://localhost/caisse-backend/synchronisation.php');
 
@@ -74,8 +86,8 @@ export default function App() {
     //   .catch(error => alert('Connexion expiré. Vérifiez si wamp est en cours d\'exécution. '));
     try {
       const response = await Promise
-          .race([timeout, request]);
-          console.log('connecté')
+        .race([timeout, request]);
+      console.log('connecté')
       return true;
     }
     catch (error) {
@@ -85,47 +97,45 @@ export default function App() {
     }
   }
 
-    // Mise a jour des données catalogue depuis le serveur toutes les 3 minutes
+  // Mise a jour des données catalogue depuis le serveur toutes les 3 minutes
 
   const updateCatalogue = () => {
 
-    fetch('http://localhost/caisse-backend/synchronisation.php?action=update', {method: "GET"})
-     .then((response) => response.json())
-     .then((responseData) =>
-     {
-      //  if(responseData.result === 1){
-      //    console.log(responseData.message)
-      //  }
-      //  else if(responseData.result === 0){  
-      //    console.log(responseData.message);
-      //  }
-     })
-     .catch((error) => {
-         console.error(error);
-     });
-   
-   }
+    fetch('http://localhost/caisse-backend/synchronisation.php?action=update', { method: "GET" })
+      .then((response) => response.json())
+      .then((responseData) => {
+        //  if(responseData.result === 1){
+        //    console.log(responseData.message)
+        //  }
+        //  else if(responseData.result === 0){  
+        //    console.log(responseData.message);
+        //  }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
- // Vérifie si le serveur est en cour d'éxécution
+  }
+
+  // Vérifie si le serveur est en cour d'éxécution
 
   const checkServerStatus = () => {
 
-    fetch('http://localhost/caisse-backend/synchronisation.php', {method: "GET"})
-     .then((response) => response.json())
-     .then((responseData) =>
-     {
-       if(responseData.response === 200){
-        setStatus(200)
-       }
-       else if(responseData.response === 404){
-         setStatus(404)
-       }
-     })
-     .catch((error) => {
-         console.error(error);
-     });
-   
-   }
+    fetch('http://localhost/caisse-backend/synchronisation.php', { method: "GET" })
+      .then((response) => response.json())
+      .then((responseData) => {
+        if (responseData.response === 200) {
+          setStatus(200)
+        }
+        else if (responseData.response === 404) {
+          setStatus(404)
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+  }
 
 
 
@@ -150,7 +160,7 @@ export default function App() {
       if (Object.keys(panierRefresh).length != 0) {
         panierRefresh.forEach(function (item) {
           // if (item.session === session) {
-            sum += remise !== 0 ? (item.pu_euro - (item.pu_euro * remise / 100)) * item.qte : item.pu_euro * item.qte
+          sum += remise !== 0 ? (item.pu_euro - (item.pu_euro * remise / 100)) * item.qte : item.pu_euro * item.qte
           // }
         })
       }
@@ -159,6 +169,7 @@ export default function App() {
   }
   const onChangeSearch = query => setSearchQuery(query);
 
+  // AJOUTE PRODUIT DANS LE PANIER
   const handleSearch = () => {
     try {
       fetch('http://localhost/caisse-backend/searchProduit.php', {
@@ -187,6 +198,26 @@ export default function App() {
       console.error(error);
     }
   }
+
+  // const updateQTE = (qte, index, ref) => {
+  //   setQTE(panierRefresh[index].qte = qte);
+  //   try {
+  //     fetch('http://localhost/caisse-backend/panier.php', {
+  //       method: 'POST',
+  //       headers: {
+  //         Accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         updateQTE: qte,
+  //         ref: ref,
+  //       })
+  //     })
+  //   }
+  //   catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
 
 
@@ -268,7 +299,7 @@ export default function App() {
 
 
   useEffect(() => {
-    totalPanier()
+    // totalPanier()
     getPanier();
     getCaisseData()
     isAvailable();
@@ -291,10 +322,11 @@ export default function App() {
     localStorage.setItem('session', session)
 
     console.log(localStorage.getItem('session'))
+    
   }, [session]);
 
 
-
+  
   function CaisseScreen({ navigation }) {
     return (
       <View style={styles.container}>
@@ -315,8 +347,7 @@ export default function App() {
             placeholder="Scanner un article..."
             onChangeText={onChangeSearch}
             value={searchQuery}
-            autoFocus={true}
-            blurOnSubmit={true}
+
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           />
           {/* <Produits passProduitData={setPanier} qte={qte} setQTE={setQTE} /> */}
@@ -342,27 +373,31 @@ export default function App() {
                   <DataTable.Title numeric style={{ flex: 0.5 }}>Remise (%)</DataTable.Title>
                   <DataTable.Title numeric style={{ flex: 0.5 }}>Remise (€)</DataTable.Title>
                 </DataTable.Header>
-                {panierRefresh && Object.keys(panierRefresh).length !== 0  ? panierRefresh.map((item, index) => {
+                {panierRefresh && Object.keys(panierRefresh).length !== 0 ? panierRefresh.map((item, index) => {
                   if (session === parseInt(item.session)) {
                     return (
                       <DataTable.Row key={index} style={styles.card}>
                         <><DataTable.Cell style={[styles.tableRow, { flex: 1 }]}>{item.titre}
                           <Icon name="trash" size={15} color="red" style={styles.iconPoubelle} onPress={() => deleteArticle(item.num)} />
                         </DataTable.Cell><DataTable.Cell style={{ justifyContent: 'flex-end', flex: 0.5 }}>
-                            <TextInput
+                            {/* <TextInput
                               style={styles.quantite}
+                              key="textinputqte"
                               mode='outlined'
                               name="itemQTE"
-                              onChangeText={(qte) => setQTE(panierRefresh[index].qte = qte)}
+                              onChangeText={(qte) => updateQTE(qte,index, item.ref)}
+                              // onKeyPress={(e) => e.key === 'Enter' && updateQTE(item.qte,index.ref)}
                               value={item.qte}
                               placeholder="0"
-                              underlineColorAndroid={"transparent"} />
+                              underlineColorAndroid={"transparent"} /> */}
+                              <TextInputQTE quantite={item.qte} refs={item.ref} index={index} panierRefresh={panierRefresh} setQTE={setQTE} />
                           </DataTable.Cell><DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>{pu_euro === 0 ? parseFloat(item.pu_euro).toFixed(2) : parseFloat(pu_euro).toFixed(2)} €</DataTable.Cell><DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>{pu_euro === 0 ? parseFloat(item.pu_euro * item.qte).toFixed(2) : parseFloat(pu_euro * item.qte).toFixed(2)} €</DataTable.Cell><DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
                             <TextInput
                               style={styles.quantite}
                               mode='outlined'
                               name="itemRemise"
-                              onChangeText={(remise) => handleRemise(remise, index, item.ref)}
+                              onChange={(remise) => handleRemise(remise, index, item.ref)}
+                              // onKeyPress={(remise,e) => e.key === 'Enter' && handleRemise(remise, index, item.ref)}
                               value={item.remise}
                               placeholder="0"
                               underlineColorAndroid={"transparent"} /> %
@@ -380,7 +415,7 @@ export default function App() {
               <Text style={{ fontFamily: 'Tahoma', fontSize: 40, color: 'steelblue', fontWeight: 600 }}>A RENDRE : {moneyToReturn.montant} €</Text>
             </View>
           }
-          <PaymentModal setModalVisible={setModalVisible} visible={modalVisible} passDataToModal={setPanier}  modalData={{ 'total': totalCaddie == 0 ? totalPanier() : totalCaddie, 'panier': panierRefresh }} setTotalParent={setTotalCaddie} setMoneyToReturn={setMoneyToReturn} type={typePaiement} idCaisse={typeof caisse.data !== 'undefined' ? caisse.data.id_caisse : 'Inconnu'} />
+          <PaymentModal setModalVisible={setModalVisible} visible={modalVisible} passDataToModal={setPanier} modalData={{ 'total': totalCaddie == 0 ? totalPanier() : totalCaddie, 'panier': panierRefresh }} setTotalParent={setTotalCaddie} setMoneyToReturn={setMoneyToReturn} type={typePaiement} idCaisse={typeof caisse.data !== 'undefined' ? caisse.data.id_caisse : 'Inconnu'} />
           <NewArticleModal setModalNewArticle={setModalNewArticle} modalNewArticle={modalNewArticle} gencode={searchQuery} />
         </View>
         <View style={{ width: '25%', marginRight: 2, alignItems: 'start', padding: 50 }}>
