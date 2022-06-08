@@ -78,7 +78,7 @@ export default function App() {
       setTimeout(reject, 5000, 'Votre demande est expiré.');
     });
 
-    const request = fetch('http://localhost/caisse-backend/synchronisation.php');
+    const request = fetch('http://localhost/caisse-backend/parametre.php');
 
     // return Promise
     //   .race([timeout, request])
@@ -302,10 +302,13 @@ export default function App() {
     // totalPanier()
     getPanier();
     getCaisseData()
-    isAvailable();
-    checkServerStatus();
+    // isAvailable();
+    // checkServerStatus();
 
-    setInterval(isAvailable(), 5000);
+    // setInterval(()=>
+    // {isAvailable()
+    // }, 5000);
+
     setInterval(() => {
       checkServerStatus();
     }, 5000);
