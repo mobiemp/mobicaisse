@@ -49,9 +49,8 @@ const paymentModal = (props) => {
         })
 
       })
-        .then((response) => response.text())
+        .then((response) => response.json())
         .then((responseJson) => {
-          console.log(responseJson)
           if (responseJson.response === 1) {
             clearPanier({})
           }
@@ -115,7 +114,6 @@ const paymentModal = (props) => {
             })
               .then((response) => response.json())
               .then((responseRetour) => {
-                console.log(responseRetour)
                 props.passDataToModal(responseRetour)
               })
           }
@@ -236,7 +234,7 @@ const paymentModal = (props) => {
   // PAIEMENT TICKET RESTAURANT
   const paiementRestaurant = () => {
     var res = false
-    console.log(ticketRestaurant,totalTemp)
+    // console.log(ticketRestaurant,totalTemp)
     if (ticketRestaurant === 0) {
       clearPanier({})
       setPaiementValeurs(4)
@@ -286,7 +284,7 @@ const paymentModal = (props) => {
       }
       else {
         var paiement = parseFloat(totalPanier) - (espece + cb + cheques + ticketRestaurant);
-        console.log(paiement, totalPanier, espece, cb, cheques, ticketRestaurant)
+        // console.log(paiement, totalPanier, espece, cb, cheques, ticketRestaurant)
         setTotalTemp(paiement)
         setShowConfirm(true)
         // setPaiementValeurs(0)
@@ -303,15 +301,15 @@ const paymentModal = (props) => {
     setEspece(espece)
     if (methodePaiement === 'cb') {
       setCB(total - montant)
-      console.log(total, montant, methodePaiement)
+      // console.log(total, montant, methodePaiement)
     }
     else if (methodePaiement === 'especes') {
       setEspece(total - montant)
-      console.log(total, montant, methodePaiement)
+      // console.log(total, montant, methodePaiement)
     }
     else if (methodePaiement === 'cheques') {
       setCheque(total - montant, methodePaiement)
-      console.log(total, montant, methodePaiement)
+      // console.log(total, montant, methodePaiement)
     }
 
   }, [totalPanier, methodePaiement]);

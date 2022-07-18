@@ -93,6 +93,8 @@ export default function App() {
      .then((response) => response.json())
      .then((responseData) =>
      {
+       console.log(responseData)
+      //  console.log(responseData)
       //  if(responseData.result === 1){
       //    console.log(responseData.message)
       //  }
@@ -114,6 +116,7 @@ export default function App() {
      .then((response) => response.json())
      .then((responseData) =>
      {
+       console.log(responseData)
        if(responseData.response === 200){
         setStatus(200)
        }
@@ -271,17 +274,17 @@ export default function App() {
     totalPanier()
     getPanier();
     getCaisseData()
-    isAvailable();
-    checkServerStatus();
-
-    setInterval(isAvailable(), 5000);
+    // isAvailable();
+    // checkServerStatus();
+    // updateCatalogue()
+    // setInterval(isAvailable(), 5000);
     setInterval(() => {
       checkServerStatus();
     }, 5000);
 
     setInterval(() => {
       updateCatalogue();
-    }, 5000);
+    }, 300000);
 
     if (focusDiv.current) focusDiv.current.focus();
   }, [focusDiv, session]);
