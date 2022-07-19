@@ -7,6 +7,7 @@ import { Text, Button, Appbar, DataTable, Searchbar, Divider } from 'react-nativ
 
 import QuantitySelector from './Components/quantitySelector';
 import RechercherArticle from './Components/searchBar'
+import RemiseInput from './Components/remiseInput'
 
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -31,6 +32,7 @@ export default function App() {
   const [panierRefresh, setPanier] = useState({});
   const [qte, setQTE] = useState(0);
   const [remise, setRemise] = useState(0)
+  const [remiseEuro,setRemiseEuro] = useState([{index:null,value:0}])
   const [searchQuery, setSearchQuery] = React.useState('');
   
   const [typePaiement, setTypePaiement] = useState('');
@@ -44,6 +46,7 @@ export default function App() {
   //Modal vue
   const [modalVisible, setModalVisible] = useState(false);
   const [modalNewArticle,setModalNewArticle] = useState(false)
+  const [modalConfirmTotal,setConfirmTotalModal] = useState(false)
   // const [modalRemise, setModalRemise] = useState(false)
   // const [produit, setProduit] = useState({})
 
@@ -93,7 +96,6 @@ export default function App() {
      .then((response) => response.json())
      .then((responseData) =>
      {
-       console.log(responseData)
       //  console.log(responseData)
       //  if(responseData.result === 1){
       //    console.log(responseData.message)
@@ -116,7 +118,6 @@ export default function App() {
      .then((response) => response.json())
      .then((responseData) =>
      {
-       console.log(responseData)
        if(responseData.response === 200){
         setStatus(200)
        }
@@ -160,7 +161,9 @@ export default function App() {
     }
     return sum
   }
+
   const onChangeSearch = query => setSearchQuery(query);
+  
 
   const handleSearch = () => {
     try {
@@ -193,8 +196,7 @@ export default function App() {
 
 
 
-  const handleRemise = (remise, index, ref) => {
-    setRemise(panierRefresh[index].remise = remise);
+  const handleRemise = (index, ref) => {
     fetch('http://localhost/caisse-backend/panier.php', {
       method: 'POST',
       headers: {
@@ -205,6 +207,13 @@ export default function App() {
         // montant:panierRefresh[index].remise,
         ajoutRemise: remise,
         ref: ref,
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if(responseJson.response == 1){
+          console.log(index,remise)
+          setRemise(panierRefresh[index].remise = remise);
+        }
       })
     })
 
@@ -258,6 +267,25 @@ export default function App() {
         }
       })
   }
+  const printTotalCaisse = () => {
+
+    fetch('http://localhost/caisse-backend/print_total_caisse.php', {method: "GET"})
+     .then((response) => response.json())
+     .then((responseData) =>
+     {
+       console.log(responseData)
+       if(responseData.response === 1){
+        alert('Ticket du total de caisse généré');
+       }
+       else{
+         alert('Aucune vente trouvé!')
+       }
+     })
+     .catch((error) => {
+         console.error(error);
+     });
+   
+   }
 
   // Affiche le panier du client suivant
   const clientSuivant = () => {
@@ -319,7 +347,7 @@ export default function App() {
             onChangeText={onChangeSearch}
             value={searchQuery}
             autoFocus={true}
-            blurOnSubmit={true}
+            blurOnSubmit={false}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           />
           {/* <Produits passProduitData={setPanier} qte={qte} setQTE={setQTE} /> */}
@@ -351,7 +379,8 @@ export default function App() {
                       <DataTable.Row key={index} style={styles.card}>
                         <><DataTable.Cell style={[styles.tableRow, { flex: 1 }]}>{item.titre}
                           <Icon name="trash" size={15} color="red" style={styles.iconPoubelle} onPress={() => deleteArticle(item.num)} />
-                        </DataTable.Cell><DataTable.Cell style={{ justifyContent: 'flex-end', flex: 0.5 }}>
+                        </DataTable.Cell>
+                        <DataTable.Cell style={{ justifyContent: 'flex-end', flex: 0.5 }}>
                             <TextInput
                               style={styles.quantite}
                               mode='outlined'
@@ -359,17 +388,37 @@ export default function App() {
                               onChangeText={(qte) => setQTE(panierRefresh[index].qte = qte)}
                               value={item.qte}
                               placeholder="0"
+                              blurOnSubmit={false}
                               underlineColorAndroid={"transparent"} />
-                          </DataTable.Cell><DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>{pu_euro === 0 ? parseFloat(item.pu_euro).toFixed(2) : parseFloat(pu_euro).toFixed(2)} €</DataTable.Cell><DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>{pu_euro === 0 ? parseFloat(item.pu_euro * item.qte).toFixed(2) : parseFloat(pu_euro * item.qte).toFixed(2)} €</DataTable.Cell><DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
-                            <TextInput
+                          </DataTable.Cell>
+                          <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
+                            {pu_euro === 0 ? parseFloat(item.pu_euro).toFixed(2) : parseFloat(pu_euro).toFixed(2)} €
+                            
+                            </DataTable.Cell>
+                          <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
+                            {pu_euro === 0 ? parseFloat(item.pu_euro * item.qte).toFixed(2) : parseFloat(pu_euro * item.qte).toFixed(2)} €
+                            </DataTable.Cell>
+                          <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
+                            <RemiseInput panier={panierRefresh} setRemise={setRemise} index={index} 
+                            reference={item.ref} remise={remise} remisePanier={item.remise} setRemiseEuro={setRemiseEuro} remiseEuro={remiseEuro} />
+                            {/* <TextInput
                               style={styles.quantite}
                               mode='outlined'
                               name="itemRemise"
-                              onChangeText={(remise) => handleRemise(remise, index, item.ref)}
-                              value={item.remise}
+                              onChangeText={newRemise => setRemise(newRemise)}
+                              blurOnSubmit={false}
+                              // onKeyPress={(e) => e.key === 'Enter' && handleRemise(index, item.ref)}
+                              value={remise}
                               placeholder="0"
-                              underlineColorAndroid={"transparent"} /> %
-                          </DataTable.Cell><DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}> {parseFloat(item.pu_euro * item.qte * remise / 100).toFixed(2)} €</DataTable.Cell></>
+                              underlineColorAndroid={"transparent"} /> % */}
+                          </DataTable.Cell>
+                          <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}> 
+                            
+                            {/* {parseFloat(panierRefresh[index].pu_euro * panierRefresh[index].qte * panierRefresh[index].remise / 100).toFixed(2)} € */}
+                            {}
+                            {remiseEuro.index === item.index ? remiseEuro.value : 0.00 } 0.00 € 
+                            
+                          </DataTable.Cell></>
                       </DataTable.Row>
                     );
                   }
@@ -419,7 +468,7 @@ export default function App() {
                 </Button>
               </View>
             </SafeAreaView>
-            <SafeAreaView style={{ flex: 1, flexDirection: "row", flexWrap: "wrap", justifyContent: 'space-between' }}>
+            <SafeAreaView style={{ flex: 1, flexDirection: "row", flexWrap: "wrap", justifyContent: 'space-between', marginBottom: 30 }}>
               <View style={styles.btn}>
                 <Button mode="contained" style={styles.btnAction} onPress={() => { setModalVisible(true), setTypePaiement('divers') }}>
                   Divers
@@ -428,6 +477,18 @@ export default function App() {
               <View style={styles.btn}>
                 <Button mode="contained" style={styles.btnAction} onPress={() => { setModalVisible(true), setTypePaiement('clear') }}>
                   Vider
+                </Button>
+              </View>
+            </SafeAreaView>
+            <SafeAreaView style={{ flex: 1, flexDirection: "row", flexWrap: "wrap", justifyContent: 'space-between' }}>
+              <View style={styles.btn}>
+                <Button mode="contained" style={styles.btnAction} onPress={() => { setModalVisible(true)  }}>
+                  Promo
+                </Button>
+              </View>
+              <View style={styles.btn}>
+                <Button mode="contained" style={styles.btnAction} onPress={() => { printTotalCaisse()  }}>
+                  Total Caisse
                 </Button>
               </View>
             </SafeAreaView>
