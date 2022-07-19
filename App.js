@@ -26,18 +26,18 @@ import useIsMounted from './useIsMonted'
 //Modal
 import PaymentModal from './Components/modal/paymentModal'
 import NewArticleModal from './Components/modal/newArticleModal'
-// import ProduitModal from './Components/modal/produitModal'
+import PromoModal from './Components/modal/promoModal'
 
 export default function App() {
   const [panierRefresh, setPanier] = useState({});
-  const [qte, setQTE] = useState(0);
+  // const [qte, setQTE] = useState(0);
   const [remise, setRemise] = useState(0)
-  const [remiseEuro,setRemiseEuro] = useState([{index:null,value:0}])
+ 
   const [searchQuery, setSearchQuery] = React.useState('');
   
   const [typePaiement, setTypePaiement] = useState('');
   const [moneyToReturn, setMoneyToReturn] = useState({ reponse: false, montant: 0 })
-  const [pu_euro, setPuEuro] = useState(0)
+  // const [pu_euro, setPuEuro] = useState(0)
   // const [isLoading, setLoading] = useState(true);
   const [produitFilter, setProduitFilter] = useState({})
   const [session, setSession] = useState(1)
@@ -46,7 +46,7 @@ export default function App() {
   //Modal vue
   const [modalVisible, setModalVisible] = useState(false);
   const [modalNewArticle,setModalNewArticle] = useState(false)
-  const [modalConfirmTotal,setConfirmTotalModal] = useState(false)
+  const [modalVisiblePromotion,setModalPromotionVisible] = useState(false)
   // const [modalRemise, setModalRemise] = useState(false)
   // const [produit, setProduit] = useState({})
 
@@ -380,7 +380,7 @@ export default function App() {
                         <><DataTable.Cell style={[styles.tableRow, { flex: 1 }]}>{item.titre}
                           <Icon name="trash" size={15} color="red" style={styles.iconPoubelle} onPress={() => deleteArticle(item.num)} />
                         </DataTable.Cell>
-                        <DataTable.Cell style={{ justifyContent: 'flex-end', flex: 0.5 }}>
+                        {/* <DataTable.Cell style={{ justifyContent: 'flex-end', flex: 0.5 }}>
                             <TextInput
                               style={styles.quantite}
                               mode='outlined'
@@ -397,28 +397,12 @@ export default function App() {
                             </DataTable.Cell>
                           <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
                             {pu_euro === 0 ? parseFloat(item.pu_euro * item.qte).toFixed(2) : parseFloat(pu_euro * item.qte).toFixed(2)} €
-                            </DataTable.Cell>
-                          <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
+                            </DataTable.Cell> */}
+                          {/* <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}> */}
                             <RemiseInput panier={panierRefresh} setRemise={setRemise} index={index} 
-                            reference={item.ref} remise={remise} remisePanier={item.remise} setRemiseEuro={setRemiseEuro} remiseEuro={remiseEuro} />
-                            {/* <TextInput
-                              style={styles.quantite}
-                              mode='outlined'
-                              name="itemRemise"
-                              onChangeText={newRemise => setRemise(newRemise)}
-                              blurOnSubmit={false}
-                              // onKeyPress={(e) => e.key === 'Enter' && handleRemise(index, item.ref)}
-                              value={remise}
-                              placeholder="0"
-                              underlineColorAndroid={"transparent"} /> % */}
-                          </DataTable.Cell>
-                          <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}> 
+                            reference={item.ref} remise={remise} remisePanier={item.remise} qte={item.qte}  />
                             
-                            {/* {parseFloat(panierRefresh[index].pu_euro * panierRefresh[index].qte * panierRefresh[index].remise / 100).toFixed(2)} € */}
-                            {}
-                            {remiseEuro.index === item.index ? remiseEuro.value : 0.00 } 0.00 € 
-                            
-                          </DataTable.Cell></>
+                          </>
                       </DataTable.Row>
                     );
                   }
@@ -440,6 +424,7 @@ export default function App() {
           <View style={[styles.shadowProp, styles.totalCaisse]}>
             <Text style={{ padding: 15, fontFamily: 'Tahoma', color: '#FFFFFF', fontSize: 32, textAlign: 'end' }}><Text style={{ fontSize: 56, fontWeight: 700, color: '#FFFFFF', fontFamily: 'Tahoma', color: '#FFFFFF' }}>{totalCaddie == 0 ? totalPanier().toFixed(2).split('.')[0] : totalCaddie.toFixed(2).split('.')[0]}</Text>€{totalCaddie == 0 ? totalPanier().toFixed(2).split('.')[1] : totalCaddie.toFixed(2).split('.')[1]}</Text>
           </View>
+          <PromoModal setVisiblePromotion={setModalPromotionVisible} modalVisiblePromotion={modalVisiblePromotion} />
 
           {/* BOUTON PRODUIT DIVERS & VARIABLE */}
           <View style={[styles.touches, styles.shadowProp, { marginTop: 30 }]}>
@@ -482,7 +467,7 @@ export default function App() {
             </SafeAreaView>
             <SafeAreaView style={{ flex: 1, flexDirection: "row", flexWrap: "wrap", justifyContent: 'space-between' }}>
               <View style={styles.btn}>
-                <Button mode="contained" style={styles.btnAction} onPress={() => { setModalVisible(true)  }}>
+                <Button mode="contained" style={styles.btnAction} onPress={() => { setModalPromotionVisible(true)  }}>
                   Promo
                 </Button>
               </View>

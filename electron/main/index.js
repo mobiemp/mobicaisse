@@ -15,6 +15,7 @@ function createMainWindow() {
 
   // browserWindow.maximize();
   // browserWindow.show()
+  // browserWindow.removeMenu()
 
   if (isDevelopment) {
     browserWindow.webContents.openDevTools();
