@@ -46,13 +46,15 @@ const paymentModal = (props) => {
           panier: props.modalData.panier,
           id_caisse: props.idCaisse,
           totalPanier: props.modalData.total,
+          session: props.session
         })
 
       })
         .then((response) => response.json())
         .then((responseJson) => {
+          console.log(responseJson)
           if (responseJson.response === 1) {
-            clearPanier({})
+            clearPanier(props.session)
           }
         })
     }
@@ -61,8 +63,8 @@ const paymentModal = (props) => {
     }
   }
 
-  clearPanier = (data) => {
-    props.passDataToModal(data);
+  clearPanier = (session) => {
+    
     fetch('http://localhost/caisse-backend/panier/emptyPanier.php', {
       method: 'POST',
       headers: {
@@ -70,13 +72,18 @@ const paymentModal = (props) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        clear: true,
+        // clear: true,
+        session:session
       })
-    }).then((response) => response.json())
+    }).then((response) => response.text())
       .then((responseJson) => {
-        if (responseJson === 1) {
+        console.log(responseJson)
+        // if (responseJson.response === 1) {
+          // if(responseJson == 1){
           props.setTotalParent(0)
-        }
+          props.passDataToModal({});
+          console.log(props.modalData.panier)
+        // }
       })
   }
 
@@ -136,13 +143,14 @@ const paymentModal = (props) => {
           articleDivers: divers,
           prixDivers: prixDivers,
           codeTVA: codeTVA,
-          id_caisse: caisseData.ID_CAISSE
+          id_caisse: caisseData.ID_CAISSE,
+          session: props.session
         })
 
       })
-        .then((response) => response.text)
-        .then((responseJson) => {
-          console.log(responseJson)
+        .then((response) => response.json())
+        .then((responseDataJson) => {
+          console.log(responseDataJson)
         });
     } catch (error) {
       console.error(error);

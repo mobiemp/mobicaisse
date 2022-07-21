@@ -8,6 +8,7 @@ import { Text, Button, Appbar, DataTable, Searchbar, Divider } from 'react-nativ
 import QuantitySelector from './Components/quantitySelector';
 import RechercherArticle from './Components/searchBar'
 import RemiseInput from './Components/remiseInput'
+import BarcodeInput from './Components/UselessTextInput'
 
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -153,9 +154,10 @@ export default function App() {
     if (panierRefresh && typeof panierRefresh !== 'undefined') {
       if (Object.keys(panierRefresh).length != 0) {
         panierRefresh.forEach(function (item) {
-          // if (item.session === session) {
+
+          if (item.session === localStorage.getItem('session')) {
             sum += remise !== 0 ? (item.pu_euro - (item.pu_euro * remise / 100)) * item.qte : item.pu_euro * item.qte
-          // }
+          }
         })
       }
     }
@@ -165,34 +167,34 @@ export default function App() {
   const onChangeSearch = query => setSearchQuery(query);
   
 
-  const handleSearch = () => {
-    try {
-      fetch('http://localhost/caisse-backend/searchProduit.php', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          search: searchQuery,
-          session: session,
-        })
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          console.log(responseJson.json)
-          if (responseJson.result === 0) {
-            setModalNewArticle(true)
-          }
-          setPanier(responseJson.json)
-          setSearchQuery('')
-          setMoneyToReturn({ reponse: false, montant: 0 })
-        })
-    }
-    catch (error) {
-      console.error(error);
-    }
-  }
+  // const handleSearch = () => {
+  //   try {
+  //     fetch('http://localhost/caisse-backend/searchProduit.php', {
+  //       method: 'POST',
+  //       headers: {
+  //         Accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         search: searchQuery,
+  //         session: session,
+  //       })
+  //     })
+  //       .then((response) => response.json())
+  //       .then((responseJson) => {
+  //         console.log(responseJson)
+  //         if (responseJson.result === 0) {
+  //           setModalNewArticle(true)
+  //         }
+  //         setPanier(responseJson.json)
+  //         setSearchQuery('')
+  //         setMoneyToReturn({ reponse: false, montant: 0 })
+  //       })
+  //   }
+  //   catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
 
 
@@ -320,8 +322,6 @@ export default function App() {
 
   useEffect(() => {
     localStorage.setItem('session', session)
-
-    console.log(localStorage.getItem('session'))
   }, [session]);
 
 
@@ -341,7 +341,7 @@ export default function App() {
           </View>
         </View>
         <View style={[{ width: '60%', margin: 25, alignItems: 'center' }]}>
-          <Searchbar
+          {/* <Searchbar
             style={styles.search}
             placeholder="Scanner un article..."
             onChangeText={onChangeSearch}
@@ -349,7 +349,8 @@ export default function App() {
             autoFocus={true}
             blurOnSubmit={false}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          />
+          /> */}
+          <BarcodeInput session={session} setPanier={setPanier} setMoneyToReturn={setMoneyToReturn} setModalNewArticle={setModalNewArticle} />
           {/* <Produits passProduitData={setPanier} qte={qte} setQTE={setQTE} /> */}
           {moneyToReturn.reponse === false ?
             <ScrollView style={[styles.shadowProp, styles.cardBox, { backgroundColor: '#F2F7FB', width: '100%', height: '70%' }]} >
@@ -416,7 +417,7 @@ export default function App() {
               <Text style={{ fontFamily: 'Tahoma', fontSize: 40, color: 'steelblue', fontWeight: 600 }}>A RENDRE : {moneyToReturn.montant} €</Text>
             </View>
           }
-          <PaymentModal setModalVisible={setModalVisible} visible={modalVisible} passDataToModal={setPanier}  modalData={{ 'total': totalCaddie == 0 ? totalPanier() : totalCaddie, 'panier': panierRefresh }} setTotalParent={setTotalCaddie} setMoneyToReturn={setMoneyToReturn} type={typePaiement} idCaisse={typeof caisse.data !== 'undefined' ? caisse.data.id_caisse : 'Inconnu'} />
+          <PaymentModal session={localStorage.getItem('session')} setModalVisible={setModalVisible} visible={modalVisible} passDataToModal={setPanier}  modalData={{ 'total': totalCaddie == 0 ? totalPanier() : totalCaddie, 'panier': panierRefresh }} setTotalParent={setTotalCaddie} setMoneyToReturn={setMoneyToReturn} type={typePaiement} idCaisse={typeof caisse.data !== 'undefined' ? caisse.data.id_caisse : 'Inconnu'} />
           <NewArticleModal setModalNewArticle={setModalNewArticle} modalNewArticle={modalNewArticle} gencode={searchQuery} />
         </View>
         <View style={{ width: '25%', marginRight: 2, alignItems: 'start', padding: 50 }}>
@@ -424,7 +425,7 @@ export default function App() {
           <View style={[styles.shadowProp, styles.totalCaisse]}>
             <Text style={{ padding: 15, fontFamily: 'Tahoma', color: '#FFFFFF', fontSize: 32, textAlign: 'end' }}><Text style={{ fontSize: 56, fontWeight: 700, color: '#FFFFFF', fontFamily: 'Tahoma', color: '#FFFFFF' }}>{totalCaddie == 0 ? totalPanier().toFixed(2).split('.')[0] : totalCaddie.toFixed(2).split('.')[0]}</Text>€{totalCaddie == 0 ? totalPanier().toFixed(2).split('.')[1] : totalCaddie.toFixed(2).split('.')[1]}</Text>
           </View>
-          <PromoModal setVisiblePromotion={setModalPromotionVisible} modalVisiblePromotion={modalVisiblePromotion} />
+          <PromoModal setModalPromotionVisible={setModalPromotionVisible} modalVisiblePromotion={modalVisiblePromotion} setPanier={setPanier} totalPanier={totalPanier()} session={session} />
 
           {/* BOUTON PRODUIT DIVERS & VARIABLE */}
           <View style={[styles.touches, styles.shadowProp, { marginTop: 30 }]}>
@@ -657,7 +658,7 @@ export default function App() {
             <Stack.Screen name={"Caisse 2"} component={Caisse2Screen} totalCaddie={totalCaddie} options={{ headerShown: false }} />
 
           ))}
-        <Stack.Screen name="Cloture" component={ClotureScreen} />
+        <Stack.Screen name="Cloture"  component={ClotureScreen} />
       </Stack.Navigator>
       <Header statut={status} duration={1000} />
     </NavigationContainer>

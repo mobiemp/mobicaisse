@@ -4,6 +4,7 @@ import ClotureForm from '../Components/clotureForm';
 
 const ClotureScreen = ({ navigation }) => {
     return (
+      
       <ClotureForm />
     );
   };

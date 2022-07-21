@@ -6,7 +6,30 @@ import { Button, Divider } from "react-native-paper"
 const promoModal = (props) => {
 
     const [promotion,setPromotion] = useState(0)
-    const [visible,setVisible] = useState(false)
+    const addPromo = () => {
+      try {
+        fetch('http://localhost/caisse-backend/panier.php', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            addPromo: promotion,
+            totalPanier:props.totalPanier,
+            session: props.session
+          })
+  
+        })
+          .then((response) => response.text())
+          .then((responseJson) => {
+            console.log(responseJson)
+          })
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
 
     const renderModal = () => {
         return (
@@ -26,7 +49,7 @@ const promoModal = (props) => {
                         selectTextOnFocus={true} />
     
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                        <Button mode="contained" style={[styles.button, styles.buttonConfirm]} onPress={() => { setVisible(true); } }>
+                        <Button mode="contained" style={[styles.button, styles.buttonConfirm]} onPress={() => { props.setModalPromotionVisible(false),addPromo() } }>
                             CONFIRMER
                         </Button>
                         <Button mode="contained" style={[styles.button, styles.buttonClose]} onPress={() => { props.setModalPromotionVisible(!props.modalVisiblePromotion); } }>

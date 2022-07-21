@@ -9,6 +9,7 @@
     "web": "expo start --web",
     "electron": "expo-electron start",
     "build": "yarn electron-webpack && yarn electron-builder",
+    "dist:linux":"yarn electro-builder",
     "test": "yarn electron-webpack && yarn electron-builder --dir -c.compression=store -c.mac.identity=null"
   },
   "dependencies": {
