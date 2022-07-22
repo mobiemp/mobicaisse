@@ -44,9 +44,9 @@ const BarcodeInput = (props) => {
       }
     }
   
-    // useEffect(() => {
-    //   barcodeInputRef.current.focus();
-    // }, []);
+    useEffect(() => {
+      barcodeInputRef.current = false;
+    }, []);
 
   return (
     // <SafeAreaView>

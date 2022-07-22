@@ -96,12 +96,12 @@ return (
     
     <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
         {/* {parseFloat(props.panier[props.index].pu_euro).toFixed(2)} € */}
-        {parseFloat(puEuro).toFixed(2)} €
+        {props.idproduit !== "#promo" ? parseFloat(puEuro).toFixed(2) : "-" + parseFloat(puEuro).toFixed(2) } €
     </DataTable.Cell>
     
     <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
         {/* {parseFloat(props.panier[props.index].pu_euro * props.panier[props.index].qte).toFixed(2)} € */}
-        {parseFloat(montantTotal).toFixed(2)} €
+        {props.idproduit !== "#promo" ? parseFloat(montantTotal).toFixed(2) : "-" + parseFloat(montantTotal).toFixed(2) } €
     </DataTable.Cell>
     
     <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>

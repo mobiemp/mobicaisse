@@ -54,6 +54,7 @@ const paymentModal = (props) => {
         .then((responseJson) => {
           console.log(responseJson)
           if (responseJson.response === 1) {
+            console.log(props.session)
             clearPanier(props.session)
           }
         })
@@ -73,16 +74,23 @@ const paymentModal = (props) => {
       },
       body: JSON.stringify({
         // clear: true,
-        session:session
+        session:props.session
       })
-    }).then((response) => response.text())
+    }).then((response) => response.json())
       .then((responseJson) => {
         console.log(responseJson)
+        if(responseJson.result != null){
+          props.passDataToModal(responseJson.json)
+        }
+        else{
+          props.passDataToModal({})
+        }
+        
+        // console.log( props.modalData.panier)
         // if (responseJson.response === 1) {
-          // if(responseJson == 1){
-          props.setTotalParent(0)
-          props.passDataToModal({});
-          console.log(props.modalData.panier)
+        //   // if(responseJson == 1){
+        //   props.setTotalParent(0)
+        //   props.passDataToModal(responseJson.result);
         // }
       })
   }
@@ -97,7 +105,7 @@ const paymentModal = (props) => {
         },
         body: JSON.stringify({
           retourArticle: retour,
-          id_caisse: caisseData.ID_CAISSE
+          id_caisse: caisseData.ID_CAISSE,
         })
 
       })
@@ -116,11 +124,14 @@ const paymentModal = (props) => {
               },
               body: JSON.stringify({
                 retourArticle: responseJson,
-                id_caisse: caisseData.ID_CAISSE
+                id_caisse: caisseData.ID_CAISSE,
+          session:props.session
+
               })
             })
               .then((response) => response.json())
               .then((responseRetour) => {
+                console.log(responseRetour)
                 props.passDataToModal(responseRetour)
               })
           }
@@ -151,6 +162,9 @@ const paymentModal = (props) => {
         .then((response) => response.json())
         .then((responseDataJson) => {
           console.log(responseDataJson)
+          if(responseDataJson.response === 1 ){
+            props.passDataToModal(responseDataJson.json)
+          }
         });
     } catch (error) {
       console.error(error);
@@ -458,12 +472,12 @@ const paymentModal = (props) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={{ textAlign: 'center' }}>Article divers: entrez son TITRE et son PRIX en EURO: </Text>
-            <TextInput
+            {/* <TextInput
               style={styles.numericInput}
               clearTextOnFocus={true}
               placeholder='TITRE'
               onChangeText={(divers) => { setArticleDivers(divers) }}
-            />
+            /> */}
             <TextInput
               style={styles.numericInput}
               keyboardType='numeric'
@@ -474,7 +488,7 @@ const paymentModal = (props) => {
 
             />
             <TextInput
-              style={styles.numericInput}
+              style={[styles.numericInput,{marginBottom:20}]}
               keyboardType='numeric'
               clearTextOnFocus={true}
               placeholder='CODE TVA'

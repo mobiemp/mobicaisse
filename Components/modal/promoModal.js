@@ -21,9 +21,13 @@ const promoModal = (props) => {
           })
   
         })
-          .then((response) => response.text())
+          .then((response) => response.json())
           .then((responseJson) => {
             console.log(responseJson)
+            if(responseJson.response == 1){
+              props.setPanier(responseJson.result)
+            }
+            
           })
       }
       catch (error) {

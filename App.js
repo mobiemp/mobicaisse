@@ -154,9 +154,14 @@ export default function App() {
     if (panierRefresh && typeof panierRefresh !== 'undefined') {
       if (Object.keys(panierRefresh).length != 0) {
         panierRefresh.forEach(function (item) {
-
+          
           if (item.session === localStorage.getItem('session')) {
-            sum += remise !== 0 ? (item.pu_euro - (item.pu_euro * remise / 100)) * item.qte : item.pu_euro * item.qte
+            if(item.id_produit == "#promo"){
+              sum -= remise !== 0 ? (item.pu_euro - (item.pu_euro * remise / 100)) * item.qte : item.pu_euro * item.qte
+            }
+            else{
+              sum += remise !== 0 ? (item.pu_euro - (item.pu_euro * remise / 100)) * item.qte : item.pu_euro * item.qte
+            }
           }
         })
       }
@@ -304,6 +309,7 @@ export default function App() {
     totalPanier()
     getPanier();
     getCaisseData()
+    document.body.style.overflow = "hidden";
     // isAvailable();
     // checkServerStatus();
     // updateCatalogue()
@@ -401,7 +407,7 @@ export default function App() {
                             </DataTable.Cell> */}
                           {/* <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}> */}
                             <RemiseInput panier={panierRefresh} setRemise={setRemise} index={index} 
-                            reference={item.ref} remise={remise} remisePanier={item.remise} qte={item.qte}  />
+                            reference={item.ref} remise={remise} remisePanier={item.remise} qte={item.qte} idproduit={item.id_produit} />
                             
                           </>
                       </DataTable.Row>
@@ -672,6 +678,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: 'space-between',
     backgroundColor: '#f8f8f8',
+    overflow:'hidden'
 
   },
   commandes: {

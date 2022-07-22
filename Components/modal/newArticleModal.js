@@ -47,7 +47,7 @@ const newArticleModal = (props) => {
     useEffect(() => {
         props.gencode !== '' ? localStorage.setItem('gencode', props.gencode) : '';
         if (isMounted.current) {
-            getCategories();
+            // getCategories();
             return () => {
                 setCategories({});
                 isMounted.current = false
