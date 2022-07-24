@@ -21,7 +21,7 @@ import CategorieListe from './Components/categorieList'
 
 // Screens
 import ClotureScreen from './Screen/ClotureScreen';
-import LoadingScreen from './Screen/loadingScreen';
+import LoadingScreen from './Screen/LoadingScreen';
 import useIsMounted from './useIsMonted'
 
 //Modal
