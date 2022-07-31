@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "electron": "expo-electron start",
     "build": "yarn electron-webpack && yarn electron-builder",
-    "dist:linux":"yarn electro-builder",
+    "dist:linux": "yarn electro-builder",
     "test": "yarn electron-webpack && yarn electron-builder --dir -c.compression=store -c.mac.identity=null"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "react-dom": "17.0.1",
     "react-hook-form": "^7.28.1",
     "react-native": "0.64.3",
+    "react-native-awesome-alerts": "^2.0.0",
     "react-native-form-component": "^2.3.1",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-modal-selector-searchable": "^2.1.4",

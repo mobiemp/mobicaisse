@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, ScrollView, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Text, Button, Appbar, DataTable, Searchbar, Divider } from 'react-native-paper'
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 import QuantitySelector from './Components/quantitySelector';
 import RechercherArticle from './Components/searchBar'
@@ -35,6 +36,7 @@ export default function App() {
   const [remise, setRemise] = useState(0)
  
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [showAlert,setShowAlert] = React.useState(false)
   
   const [typePaiement, setTypePaiement] = useState('');
   const [moneyToReturn, setMoneyToReturn] = useState({ reponse: false, montant: 0 })
@@ -147,7 +149,6 @@ export default function App() {
       console.error("ERREUR");
     }
   };
-
   const totalPanier = () => {
     var sum = 0;
     // console.log(panierRefresh, typeof panierRefresh)
@@ -244,7 +245,6 @@ export default function App() {
         .then((responseJson) => {
           if (responseJson.response === 0) {
             setPanier({});
-            console.log(panierRefresh)
             setTotalCaddie(0);
           }
           else {
@@ -302,8 +302,7 @@ export default function App() {
   const clientPrecedent = () => {
     setSession(prevState => prevState - 1)
   }
-
-
+  
 
   useEffect(() => {
     totalPanier()
@@ -325,16 +324,17 @@ export default function App() {
     if (focusDiv.current) focusDiv.current.focus();
   }, [focusDiv, session]);
 
+  
 
   useEffect(() => {
     localStorage.setItem('session', session)
   }, [session]);
 
 
-
   function CaisseScreen({ navigation }) {
     return (
       <View style={styles.container}>
+        
         <View style={{ width: "7%", height: '100%', zIndex: 9999, backgroundColor: '#303456' }}>
           <View style={styles.leftIcon}>
             <Icon name="home" size={30} color="#FFFFFF" style={styles.iconMenu} onPress={() => { navigation.navigate('Caisse') }} />
@@ -347,6 +347,7 @@ export default function App() {
           </View>
         </View>
         <View style={[{ width: '60%', margin: 25, alignItems: 'center' }]}>
+        
           {/* <Searchbar
             style={styles.search}
             placeholder="Scanner un article..."
@@ -356,7 +357,8 @@ export default function App() {
             blurOnSubmit={false}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           /> */}
-          <BarcodeInput session={session} setPanier={setPanier} setMoneyToReturn={setMoneyToReturn} setModalNewArticle={setModalNewArticle} />
+          <BarcodeInput session={session} setPanier={setPanier} setMoneyToReturn={setMoneyToReturn} setModalNewArticle={setModalNewArticle}
+          setShowAlert={setShowAlert} />
           {/* <Produits passProduitData={setPanier} qte={qte} setQTE={setQTE} /> */}
           {moneyToReturn.reponse === false ?
             <ScrollView style={[styles.shadowProp, styles.cardBox, { backgroundColor: '#F2F7FB', width: '100%', height: '70%' }]} >
@@ -371,6 +373,7 @@ export default function App() {
               <Button mode="contained" style={{ width: 200, position: 'absolute', right: 15, top: 10, zIndex: 9999 }} onPress={() => { clientSuivant() }}>
                 Client Suivant
               </Button>
+              
               <DataTable style={styles.containerAjout}>
                 <DataTable.Header>
                   <DataTable.Title style={{ flex: 1 }}>Désignation</DataTable.Title>
@@ -380,6 +383,9 @@ export default function App() {
                   <DataTable.Title numeric style={{ flex: 0.5 }}>Remise (%)</DataTable.Title>
                   <DataTable.Title numeric style={{ flex: 0.5 }}>Remise (€)</DataTable.Title>
                 </DataTable.Header>
+
+
+
                 {panierRefresh && Object.keys(panierRefresh).length !== 0  ? panierRefresh.map((item, index) => {
                   if (session === parseInt(item.session)) {
                     return (
@@ -387,34 +393,19 @@ export default function App() {
                         <><DataTable.Cell style={[styles.tableRow, { flex: 1 }]}>{item.titre}
                           <Icon name="trash" size={15} color="red" style={styles.iconPoubelle} onPress={() => deleteArticle(item.num)} />
                         </DataTable.Cell>
-                        {/* <DataTable.Cell style={{ justifyContent: 'flex-end', flex: 0.5 }}>
-                            <TextInput
-                              style={styles.quantite}
-                              mode='outlined'
-                              name="itemQTE"
-                              onChangeText={(qte) => setQTE(panierRefresh[index].qte = qte)}
-                              value={item.qte}
-                              placeholder="0"
-                              blurOnSubmit={false}
-                              underlineColorAndroid={"transparent"} />
-                          </DataTable.Cell>
-                          <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
-                            {pu_euro === 0 ? parseFloat(item.pu_euro).toFixed(2) : parseFloat(pu_euro).toFixed(2)} €
-                            
-                            </DataTable.Cell>
-                          <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}>
-                            {pu_euro === 0 ? parseFloat(item.pu_euro * item.qte).toFixed(2) : parseFloat(pu_euro * item.qte).toFixed(2)} €
-                            </DataTable.Cell> */}
-                          {/* <DataTable.Cell numeric style={[styles.tableRow, { flex: 0.5 }]}> */}
                             <RemiseInput panier={panierRefresh} setRemise={setRemise} index={index} 
-                            reference={item.ref} remise={remise} remisePanier={item.remise} qte={item.qte} idproduit={item.id_produit} />
-                            
+                            reference={item.ref} remise={remise} remisePanier={item.remise} qte={item.qte} idproduit={item.id_produit} />  
                           </>
                       </DataTable.Row>
                     );
                   }
                 }
-                ) : <View style={{ justifyContent: 'center', alignItems: 'center' }}></View>}
+                )
+                  :  
+                  <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                   
+                  </View>
+                  }
               </DataTable>
 
             </ScrollView>
@@ -425,6 +416,25 @@ export default function App() {
           }
           <PaymentModal session={localStorage.getItem('session')} setModalVisible={setModalVisible} visible={modalVisible} passDataToModal={setPanier}  modalData={{ 'total': totalCaddie == 0 ? totalPanier() : totalCaddie, 'panier': panierRefresh }} setTotalParent={setTotalCaddie} setMoneyToReturn={setMoneyToReturn} type={typePaiement} idCaisse={typeof caisse.data !== 'undefined' ? caisse.data.id_caisse : 'Inconnu'} />
           <NewArticleModal setModalNewArticle={setModalNewArticle} modalNewArticle={modalNewArticle} gencode={searchQuery} />
+          <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title="Erreur de saisie ! "
+          // message="Cette article n'existe pas."
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Annuler"
+          confirmText="OK"
+          confirmButtonColor="#DD6B55"
+          onCancelPressed={() => {
+            setShowAlert(false)
+          }}
+          onConfirmPressed={() => {
+            setShowAlert(false)
+          }}
+        />
         </View>
         <View style={{ width: '25%', marginRight: 2, alignItems: 'start', padding: 50 }}>
           <Text style={{ fontFamily: 'Tahoma', fontSize: 22, fontWeight: 700, margin: 15 }}>TOTAL A PAYER</Text>

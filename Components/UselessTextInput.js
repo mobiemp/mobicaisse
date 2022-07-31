@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
-import { SafeAreaView, StyleSheet, TextInput } from "react-native";
+import { View, StyleSheet, TextInput } from "react-native";
 import { Searchbar } from 'react-native-paper';
+
 
 const BarcodeInput = (props) => {
   const [searchQuery, setSearchQuery] = React.useState('');
+  
+  const [focus,setFocus] = React.useState(true)
     const onChangeSearch = query => setSearchQuery(query);
     const clearInput = React.useCallback(()=> onChangeSearch(''), []);
     const barcodeInputRef = React.useRef();
+
     const handleSearch = () => {
       try {
         fetch('http://localhost/caisse-backend/searchProduit.php', {
@@ -27,9 +31,9 @@ const BarcodeInput = (props) => {
               props.setModalNewArticle(true)
             }
             if(responseJson.result === 2){
-              setSearchQuery('')
-              // barcodeInputRef.current.focus();
-              alert('ERREUR DE SAISIE.')
+              setSearchQuery('');
+              barcodeInputRef.current.focus();
+              props.setShowAlert(true)
             }
             else{
               props.setPanier(responseJson.json)
@@ -45,11 +49,12 @@ const BarcodeInput = (props) => {
     }
   
     useEffect(() => {
-      barcodeInputRef.current = false;
-    }, []);
+      return () => {
+        setSearchQuery('');
+      };
+  }, []);
 
   return (
-    // <SafeAreaView>
       <Searchbar
         style={styles.search}
         onChangeText={onChangeSearch}
@@ -59,7 +64,6 @@ const BarcodeInput = (props) => {
         onKeyPress={(e) => e.key === 'Enter' && handleSearch(e)}
         ref={barcodeInputRef}
       />
-    // </SafeAreaView>
   );
 };
 
