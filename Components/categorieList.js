@@ -13,7 +13,7 @@ const categorieList = (props) => {
 
   const getCategories = async () => {
     try {
-      const response = await fetch('http://localhost/caisse-backend/categorie.php?' + new URLSearchParams({
+      const response = await fetch('http://caisse.serveravatartmp.com/caisse-backend/categorie.php?' + new URLSearchParams({
         action: 'categorieListe',
       }))
       const json = await response.json();
@@ -28,7 +28,7 @@ const categorieList = (props) => {
 
 
   const getCategoryArticle = (categoryID) => {
-    return fetch('http://localhost/caisse-backend/categorie.php?' + new URLSearchParams({
+    return fetch('http://caisse.serveravatartmp.com/caisse-backend/categorie.php?' + new URLSearchParams({
       action: 'byCategory',
       categorieID: categoryID
     }))

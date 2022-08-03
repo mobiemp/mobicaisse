@@ -72,7 +72,7 @@ export default function App() {
       setTimeout(reject, 5000, 'Votre demande est expiré.');
   });
 
-    const request = fetch('http://localhost/caisse-backend/synchronisation.php');
+    const request = fetch('http://caisse.serveravatartmp.com/caisse-backend/synchronisation.php');
 
     // return Promise
     //   .race([timeout, request])
@@ -95,7 +95,7 @@ export default function App() {
 
   const updateCatalogue = () => {
 
-    fetch('http://localhost/caisse-backend/synchronisation.php?action=update', {method: "GET"})
+    fetch('http://caisse.serveravatartmp.com/caisse-backend/synchronisation.php?action=update', {method: "GET"})
      .then((response) => response.json())
      .then((responseData) =>
      {
@@ -116,7 +116,7 @@ export default function App() {
 
   const checkServerStatus = () => {
 
-    fetch('http://localhost/caisse-backend/synchronisation.php', {method: "GET"})
+    fetch('http://caisse.serveravatartmp.com/caisse-backend/synchronisation.php', {method: "GET"})
      .then((response) => response.json())
      .then((responseData) =>
      {
@@ -142,7 +142,7 @@ export default function App() {
   // Contenu du caddie
   const getPanier = async () => {
     try {
-      const response = await fetch('http://localhost/caisse-backend/ajoutpanier.php');
+      const response = await fetch('http://caisse.serveravatartmp.com/caisse-backend/ajoutpanier.php');
       const json = await response.json();
       setPanier(json);
     } catch (error) {
@@ -175,7 +175,7 @@ export default function App() {
 
   // const handleSearch = () => {
   //   try {
-  //     fetch('http://localhost/caisse-backend/searchProduit.php', {
+  //     fetch('http://caisse.serveravatartmp.com/caisse-backend/searchProduit.php', {
   //       method: 'POST',
   //       headers: {
   //         Accept: 'application/json',
@@ -204,7 +204,7 @@ export default function App() {
 
 
   const handleRemise = (index, ref) => {
-    fetch('http://localhost/caisse-backend/panier.php', {
+    fetch('http://caisse.serveravatartmp.com/caisse-backend/panier.php', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -231,7 +231,7 @@ export default function App() {
 
   const deleteArticle = (num) => {
     try {
-      fetch('http://localhost/caisse-backend/panier.php', {
+      fetch('http://caisse.serveravatartmp.com/caisse-backend/panier.php', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -257,7 +257,7 @@ export default function App() {
   }
 
   clearPanier = (data) => {
-    fetch('http://localhost/caisse-backend/panier/emptyPanier.php', {
+    fetch('http://caisse.serveravatartmp.com/caisse-backend/panier/emptyPanier.php', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -275,7 +275,7 @@ export default function App() {
   }
   const printTotalCaisse = () => {
 
-    fetch('http://localhost/caisse-backend/print_total_caisse.php', {method: "GET"})
+    fetch('http://caisse.serveravatartmp.com/caisse-backend/print_total_caisse.php', {method: "GET"})
      .then((response) => response.json())
      .then((responseData) =>
      {

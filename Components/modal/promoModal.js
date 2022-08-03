@@ -8,7 +8,7 @@ const promoModal = (props) => {
     const [promotion,setPromotion] = useState(0)
     const addPromo = () => {
       try {
-        fetch('http://localhost/caisse-backend/panier.php', {
+        fetch('http://caisse.serveravatartmp.com/caisse-backend/panier.php', {
           method: 'POST',
           headers: {
             Accept: 'application/json',

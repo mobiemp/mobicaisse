@@ -17,7 +17,7 @@ const remiseInput = (props) => {
     // CHAMPS REMISE
     const handleRemise = (index, ref) => {
         try {
-            fetch('http://localhost/caisse-backend/panier.php', {
+            fetch('http://caisse.serveravatartmp.com/caisse-backend/panier.php', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -48,7 +48,7 @@ const remiseInput = (props) => {
 // CHAMPS QUANTITE
 const handleQte = (index, ref) => {
     try {
-        fetch('http://localhost/caisse-backend/panier.php', {
+        fetch('http://caisse.serveravatartmp.com/caisse-backend/panier.php', {
         method: 'POST',
         headers: {
             Accept: 'application/json',

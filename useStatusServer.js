@@ -4,7 +4,7 @@ const useStatusServer = ({ pollingInterval }) => {
     const [status, setStatus] = useState();
     useEffect(() => {
        const interval = setInterval(() => {
-        fetch('http://localhost/caisse-backend/synchronisation?'+ new URLSearchParams({
+        fetch('http://caisse.serveravatartmp.com/caisse-backend/synchronisation?'+ new URLSearchParams({
           action: 'connexion',
           idcaisse: 1,
         }))

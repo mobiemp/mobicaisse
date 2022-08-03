@@ -55,7 +55,7 @@ const Article = (props) => {
     // }
     const addToPanier = (item) => {
         try {
-            fetch('http://localhost/caisse-backend/panier.php', {
+            fetch('http://caisse.serveravatartmp.com/caisse-backend/panier.php', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

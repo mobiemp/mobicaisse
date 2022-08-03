@@ -11,7 +11,7 @@ const SearchArticleModal = (props) => {
 
     searchArticle = ()  => {
         try {
-          fetch('http://localhost/caisse-backend/catalogue.php', {
+          fetch('http://caisse.serveravatartmp.com/caisse-backend/catalogue.php', {
             method: 'POST',
             headers: {
               Accept: 'application/json',

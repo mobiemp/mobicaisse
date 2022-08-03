@@ -13,7 +13,7 @@ const BarcodeInput = (props) => {
 
     const handleSearch = () => {
       try {
-        fetch('http://localhost/caisse-backend/searchProduit.php', {
+        fetch('http://caisse.serveravatartmp.com/caisse-backend/searchProduit.php', {
           method: 'POST',
           headers: {
             Accept: 'application/json',

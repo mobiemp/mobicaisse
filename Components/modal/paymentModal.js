@@ -36,7 +36,7 @@ const paymentModal = (props) => {
 
   const createTicket = () => {
     try {
-      fetch('http://localhost/caisse-backend/tickets/ajoutTicket.php', {
+      fetch('http://caisse.serveravatartmp.com/caisse-backend/tickets/ajoutTicket.php', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -65,7 +65,7 @@ const paymentModal = (props) => {
 
   clearPanier = (session) => {
     
-    fetch('http://localhost/caisse-backend/panier/emptyPanier.php', {
+    fetch('http://caisse.serveravatartmp.com/caisse-backend/panier/emptyPanier.php', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -96,7 +96,7 @@ const paymentModal = (props) => {
 
   retourArticle = async (retour) => {
     try {
-      fetch('http://localhost/caisse-backend/catalogue.php', {
+      fetch('http://caisse.serveravatartmp.com/caisse-backend/catalogue.php', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -115,7 +115,7 @@ const paymentModal = (props) => {
             setShowSearchModal(true)
           }
           else if (validbarcode(responseJson.ref)) {
-            fetch('http://localhost/caisse-backend/panier.php', {
+            fetch('http://caisse.serveravatartmp.com/caisse-backend/panier.php', {
               method: 'POST',
               headers: {
                 Accept: 'application/json',
@@ -143,7 +143,7 @@ const paymentModal = (props) => {
   createArticleDivers = () => {
 
     try {
-      fetch('http://localhost/caisse-backend/panier.php', {
+      fetch('http://caisse.serveravatartmp.com/caisse-backend/panier.php', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -176,7 +176,7 @@ const paymentModal = (props) => {
     var p_cb = (type === 2 && totalTemp === totalPanier ? totalPanier : (type === 2 && totalPanier > totalTemp ? totalTemp : cb));
     var p_cheque = (type === 3 && totalTemp === totalPanier ? totalPanier : (type === 3 && totalPanier > totalTemp ? totalTemp : cheques));
     var p_restaurant = (type === 4 && totalTemp === totalPanier ? totalPanier : (type === 4 && totalPanier > totalTemp ? totalTemp : ticketRestaurant));
-    fetch('http://localhost/caisse-backend/panier/panier_temp.php', {
+    fetch('http://caisse.serveravatartmp.com/caisse-backend/panier/panier_temp.php', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

@@ -15,7 +15,7 @@ const produitList = (props) => {
 
   const getArticles = async () => {
     try {
-      const response = await fetch('http://localhost/caisse-backend/catalogue.php?' + new URLSearchParams({
+      const response = await fetch('http://caisse.serveravatartmp.com/caisse-backend/catalogue.php?' + new URLSearchParams({
         action: 'articleList',
       }))
       const json = await response.json();
@@ -30,7 +30,7 @@ const produitList = (props) => {
   // articles configuration
   const addToPanier = (item) => {
     try {
-        fetch('http://localhost/caisse-backend/panier.php', {
+        fetch('http://caisse.serveravatartmp.com/caisse-backend/panier.php', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

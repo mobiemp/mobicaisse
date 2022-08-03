@@ -33,7 +33,7 @@ const newArticleModal = (props) => {
 
     const getCategories = async () => {
         try {
-            const response = await fetch('http://localhost/caisse-backend/categorie.php?' + new URLSearchParams({
+            const response = await fetch('http://caisse.serveravatartmp.com/caisse-backend/categorie.php?' + new URLSearchParams({
                 action: 'categorieListe',
             }))
             const json = await response.json();
@@ -63,7 +63,7 @@ const newArticleModal = (props) => {
 
     const addArticle = () => {
         try {
-            fetch('http://localhost/caisse-backend/catalogue.php', {
+            fetch('http://caisse.serveravatartmp.com/caisse-backend/catalogue.php', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
