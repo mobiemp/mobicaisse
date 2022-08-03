@@ -21,7 +21,6 @@ const newArticleModal = (props) => {
         prix: '0.00',
         promo: '0.00',
     })
-
     const [errorMessage, setMessageError] = useState('')
     const [successMessage, setMessageSuccess] = useState('')
     const [categories, setCategories] = useState({})
@@ -47,7 +46,7 @@ const newArticleModal = (props) => {
     useEffect(() => {
         props.gencode !== '' ? localStorage.setItem('gencode', props.gencode) : '';
         if (isMounted.current) {
-            // getCategories();
+            getCategories();
             return () => {
                 setCategories({});
                 isMounted.current = false
@@ -82,10 +81,12 @@ const newArticleModal = (props) => {
                 .then((responseJson) => {
                     console.log(responseJson)
                     if (responseJson.response === 0) {
-                        setErrorMessage(responseJson.message)
+                        setErrorMessage('Une erreur c\'est produite')
                     }
-                    if (responseJson.response === 1) {
-                        setMessageSuccess(responseJson.message)
+                    else {
+                        setMessageSuccess('Article ajouté au catalogue')
+                        props.setPanier(responseJson)
+                        props.setModalNewArticle(false)
                     }
                 })
         }

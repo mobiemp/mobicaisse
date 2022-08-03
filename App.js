@@ -99,7 +99,6 @@ export default function App() {
      .then((response) => response.json())
      .then((responseData) =>
      {
-      //  console.log(responseData)
       //  if(responseData.result === 1){
       //    console.log(responseData.message)
       //  }
@@ -121,6 +120,7 @@ export default function App() {
      .then((response) => response.json())
      .then((responseData) =>
      {
+        console.log(responseData)
        if(responseData.response === 200){
         setStatus(200)
        }
@@ -201,7 +201,6 @@ export default function App() {
   //     console.error(error);
   //   }
   // }
-
 
 
   const handleRemise = (index, ref) => {
@@ -319,7 +318,7 @@ export default function App() {
 
     setInterval(() => {
       updateCatalogue();
-    }, 300000);
+    }, 5000);
 
     if (focusDiv.current) focusDiv.current.focus();
   }, [focusDiv, session]);
@@ -358,7 +357,7 @@ export default function App() {
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           /> */}
           <BarcodeInput session={session} setPanier={setPanier} setMoneyToReturn={setMoneyToReturn} setModalNewArticle={setModalNewArticle}
-          setShowAlert={setShowAlert} />
+          setShowAlert={setShowAlert} setNewGencode={setSearchQuery} />
           {/* <Produits passProduitData={setPanier} qte={qte} setQTE={setQTE} /> */}
           {moneyToReturn.reponse === false ?
             <ScrollView style={[styles.shadowProp, styles.cardBox, { backgroundColor: '#F2F7FB', width: '100%', height: '70%' }]} >
@@ -415,7 +414,7 @@ export default function App() {
             </View>
           }
           <PaymentModal session={localStorage.getItem('session')} setModalVisible={setModalVisible} visible={modalVisible} passDataToModal={setPanier}  modalData={{ 'total': totalCaddie == 0 ? totalPanier() : totalCaddie, 'panier': panierRefresh }} setTotalParent={setTotalCaddie} setMoneyToReturn={setMoneyToReturn} type={typePaiement} idCaisse={typeof caisse.data !== 'undefined' ? caisse.data.id_caisse : 'Inconnu'} />
-          <NewArticleModal setModalNewArticle={setModalNewArticle} modalNewArticle={modalNewArticle} gencode={searchQuery} />
+          <NewArticleModal setModalNewArticle={setModalNewArticle} modalNewArticle={modalNewArticle} gencode={searchQuery} setPanier={setPanier} />
           <AwesomeAlert
           show={showAlert}
           showProgress={false}
@@ -485,7 +484,7 @@ export default function App() {
             <SafeAreaView style={{ flex: 1, flexDirection: "row", flexWrap: "wrap", justifyContent: 'space-between' }}>
               <View style={styles.btn}>
                 <Button mode="contained" style={styles.btnAction} onPress={() => { setModalPromotionVisible(true)  }}>
-                  Promo
+                  Remise
                 </Button>
               </View>
               <View style={styles.btn}>

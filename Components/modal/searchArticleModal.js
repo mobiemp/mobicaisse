@@ -35,7 +35,7 @@ const SearchArticleModal = (props) => {
     return (
       <ModalSelector
         data={data}
-        initValue="Select something yummy!"
+        initValue=""
         supportedOrientations={['landscape']}
         accessible={true}
         scrollViewAccessibilityLabel={'Scrollable options'}

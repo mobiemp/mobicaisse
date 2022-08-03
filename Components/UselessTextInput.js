@@ -29,6 +29,8 @@ const BarcodeInput = (props) => {
             console.log(responseJson)
             if (responseJson.result === 0) {
               props.setModalNewArticle(true)
+              props.setNewGencode(searchQuery)
+              
             }
             if(responseJson.result === 2){
               setSearchQuery('');

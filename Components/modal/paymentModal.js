@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View, TextInput } from "react-native";
 import { Button, Divider } from "react-native-paper"
 import searchArticleModal from './searchArticleModal'
-import * as caisseData from '../../caisse_data'
+// import * as caisseData from '../../caisse_data'
 import validbarcode from "barcode-validator";
 import realm from "../../Schema/panier"
 
@@ -54,7 +54,6 @@ const paymentModal = (props) => {
         .then((responseJson) => {
           console.log(responseJson)
           if (responseJson.response === 1) {
-            console.log(props.session)
             clearPanier(props.session)
           }
         })
@@ -105,7 +104,7 @@ const paymentModal = (props) => {
         },
         body: JSON.stringify({
           retourArticle: retour,
-          id_caisse: caisseData.ID_CAISSE,
+          // id_caisse: caisseData.ID_CAISSE,
         })
 
       })
@@ -124,7 +123,7 @@ const paymentModal = (props) => {
               },
               body: JSON.stringify({
                 retourArticle: responseJson,
-                id_caisse: caisseData.ID_CAISSE,
+                // id_caisse: caisseData.ID_CAISSE,
           session:props.session
 
               })
@@ -154,7 +153,7 @@ const paymentModal = (props) => {
           articleDivers: divers,
           prixDivers: prixDivers,
           codeTVA: codeTVA,
-          id_caisse: caisseData.ID_CAISSE,
+          // id_caisse: caisseData.ID_CAISSE,
           session: props.session
         })
 
@@ -189,7 +188,7 @@ const paymentModal = (props) => {
         cheques: p_cheque,
         ticket_restaurant: p_restaurant,
         totalTemp: totalTemp,
-        id_caisse: caisseData.ID_CAISSE
+        // id_caisse: caisseData.ID_CAISSE
       })
 
     })
